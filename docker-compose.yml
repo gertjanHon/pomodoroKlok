@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  pomodoro-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3141:3000"
+    container_name: pomodoro-klok
+    restart: unless-stopped
