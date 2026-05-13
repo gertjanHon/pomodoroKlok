@@ -7,3 +7,16 @@ services:
       - "3124:3000"
     container_name: pomodoroklok
     restart: unless-stopped
+
+  pomodoro-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5179:8080"
+    container_name: pomodoroklok-api
+    restart: unless-stopped
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    env_file:
+      - .env

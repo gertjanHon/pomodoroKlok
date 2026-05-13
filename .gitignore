@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
 
 # Lock files (keep pnpm-lock.yaml only)
 package-lock.json
@@ -24,5 +25,20 @@ yarn.lock
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
+
+# .NET Core
+backend/bin/
+backend/obj/
+backend/*.user
+backend/.vs/
+backend/**/.vs/
+*.DotSettings.user
+[Pp]ublish/
+[Pp]ackages/
+!packages/repositories.config
+*.nupkg
+*.snupkg
+*.pfx
+*.p12
+appsettings.Development.json

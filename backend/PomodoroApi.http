@@ -1,0 +1,6 @@
+@PomodoroApi_HostAddress = http://localhost:5179
+
+GET {{PomodoroApi_HostAddress}}/api/generate-plan/
+Accept: application/json
+
+###
