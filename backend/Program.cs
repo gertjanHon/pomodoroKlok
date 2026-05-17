@@ -29,7 +29,12 @@ app.UseCors(p => p
     .AllowAnyHeader()
     .AllowAnyMethod());
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapAiEndpoints();
+
+app.MapFallbackToFile("index.html");
 
 app.Run();
 

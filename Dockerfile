@@ -1,34 +1,25 @@
-# Build stage
-FROM node:20-alpine AS build
-
+# Stage 1: build frontend
+FROM node:20-alpine AS frontend
 WORKDIR /app
-
-# Install pnpm
 RUN npm install -g pnpm@9
-
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
-
-# Install dependencies
+COPY package.json ./
 RUN pnpm install --no-frozen-lockfile --ignore-scripts
-
-# Copy source files
-COPY . .
-
-# Build the application
+COPY src/ src/
+COPY index.html vite.config.js ./
 RUN pnpm run build
 
-# Production stage
-FROM nginx:alpine
+# Stage 2: build backend
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS backend
+WORKDIR /src
+COPY backend/PomodoroApi.csproj ./
+RUN dotnet restore
+COPY backend/ ./
+RUN dotnet publish -c Release -o /app/publish
 
-# Copy built assets from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 3000
-EXPOSE 3000
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Stage 3: final image
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
+WORKDIR /app
+COPY --from=backend /app/publish .
+COPY --from=frontend /app/dist ./wwwroot
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "PomodoroApi.dll"]
