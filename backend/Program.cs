@@ -1,21 +1,25 @@
 using DotNetEnv;
 using OpenAI.Chat;
+using PomodoroApi.Endpoints;
+using PomodoroApi.Services;
 
 if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OPENAI_API_KEY")))
     Env.TraversePath().Load();
 
+var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors();
-
 builder.Services.AddOpenApi();
+builder.Services.AddSingleton(new ApiConfig(apiKey));
 
-var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
-    ?? throw new InvalidOperationException("OPENAI_API_KEY not set in environment or .env file.");
+if (!string.IsNullOrEmpty(apiKey))
+    builder.Services.AddSingleton(new ChatClient(model: "gpt-4o", apiKey: apiKey));
+
+var promptTemplate = await File.ReadAllTextAsync("prompts/ProductivityCoach.txt");
+builder.Services.AddSingleton(new PromptService(promptTemplate));
 
 var app = builder.Build();
-
-
 
 if (app.Environment.IsDevelopment())
     app.MapOpenApi();
@@ -25,19 +29,8 @@ app.UseCors(p => p
     .AllowAnyHeader()
     .AllowAnyMethod());
 
-app.MapPost("/api/generate-plan", async (GoalRequest req) =>
-{
-    var template = await File.ReadAllTextAsync("prompts/ProductivityCoach.txt");
-    var prompt = template.Replace("{{USER_INPUT}}", req.Goal);
-    var client = new ChatClient(model: "gpt-4o", apiKey: apiKey);
-  
-    ChatCompletion completion = await client.CompleteChatAsync(
-        new UserChatMessage(prompt)
-    );
-    return Results.Ok(new { plan = completion.Content[0].Text });
-})
-.WithName("GeneratePlan");
+app.MapAiEndpoints();
 
 app.Run();
 
-record GoalRequest(string Goal);
+record ApiConfig(string? OpenAiApiKey);

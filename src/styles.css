@@ -47,6 +47,23 @@ body {
   text-align: left;
   padding-right: 40px;
   border-right: 1px solid #e0e0e0;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  padding-right: 0;
+  border-right: none;
+  pointer-events: none;
+  transition: max-width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.5s ease 0.1s,
+              padding-right 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pomodoro-objective--visible {
+  max-width: 600px;
+  opacity: 1;
+  padding-right: 40px;
+  border-right: 1px solid #e0e0e0;
+  pointer-events: auto;
 }
 
 .pomodoro-objective h1 {
@@ -367,12 +384,13 @@ body {
     padding: 40px 30px;
   }
 
-  .pomodoro-objective {
+  .pomodoro-objective--visible {
     padding-right: 0;
     padding-bottom: 30px;
     border-right: none;
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 30px;
+    max-width: 100%;
   }
 
   .pomodoro-timer {
@@ -482,7 +500,7 @@ body {
   color: #f3f4f6;
 }
 
-[data-theme="dark"] .pomodoro-objective {
+[data-theme="dark"] .pomodoro-objective--visible {
   border-right-color: #374151;
 }
 
@@ -521,7 +539,7 @@ body {
 }
 
 @media (max-width: 700px) {
-  [data-theme="dark"] .pomodoro-objective {
+  [data-theme="dark"] .pomodoro-objective--visible {
     border-bottom-color: #374151;
     border-right: none;
   }

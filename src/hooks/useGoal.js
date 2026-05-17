@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 async function fetchPlanFromApi(goal) {
-    const response = await fetch ('http://localhost:5179/api/generate-plan', {
+    const response = await fetch('/api/generate-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ goal })

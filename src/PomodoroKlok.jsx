@@ -9,12 +9,20 @@ import { useGoal } from './hooks/useGoal'
 function PomodoroKlok() {
   const [mode, setMode] = useState('POMODORO')
   const [sessionCount, setSessionCount] = useState(0)
+  const [aiConfigured, setAiConfigured] = useState(false)
   const { theme, toggleTheme } = useTheme()
   const { goal, setGoal, plan, isLoading, resetGoal, generatePlan } = useGoal()
   const audioRef = useRef(null)
 
   useEffect(() => {
     audioRef.current = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGWi89+SfTQwMUKjj8LdjGwU5kdj0y4IvBSR3x/DdkUAKFF60zr15');
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/check')
+      .then(r => r.json())
+      .then(data => { if (data.success) setAiConfigured(true) })
+      .catch(() => {})
   }, [])
 
   const handleComplete = () => {
@@ -42,7 +50,7 @@ function PomodoroKlok() {
 
   return (
     <div className="pomodoro-container">
-      <div className="pomodoro-objective">
+      <div className={`pomodoro-objective${aiConfigured ? ' pomodoro-objective--visible' : ''}`}>
         <h1>What is the objective?</h1>
 
         {plan ? (
