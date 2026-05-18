@@ -11,7 +11,7 @@ function PomodoroKlok() {
   const [sessionCount, setSessionCount] = useState(0)
   const [aiConfigured, setAiConfigured] = useState(false)
   const { theme, toggleTheme } = useTheme()
-  const { goal, setGoal, plan, isLoading, resetGoal, generatePlan } = useGoal()
+  const { goal, setGoal, plan, isLoading, resetGoal, generatePlan, history, selectPlan, clearHistory } = useGoal()
   const audioRef = useRef(null)
 
   useEffect(() => {
@@ -76,6 +76,40 @@ function PomodoroKlok() {
             Reset
           </button>
         </div>
+
+        {history.length > 0 && (
+          <div className="plan-history">
+            <div className="plan-history-header">
+              <h2>History</h2>
+              <button
+                type="button"
+                className="plan-history-clear"
+                onClick={clearHistory}
+              >
+                Clear
+              </button>
+            </div>
+            <ul className="plan-history-list">
+              {history.map((entry) => {
+                const isActive = plan?.plan === entry.plan
+                return (
+                  <li key={entry.id}>
+                    <button
+                      type="button"
+                      className={`plan-history-item${isActive ? ' plan-history-item--active' : ''}`}
+                      onClick={() => selectPlan(entry.id)}
+                    >
+                      <span className="plan-history-goal">{entry.goal}</span>
+                      <span className="plan-history-date">
+                        {new Date(entry.createdAt).toLocaleDateString()}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="pomodoro-timer">
         <button

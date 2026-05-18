@@ -42,7 +42,7 @@ body {
 
 .pomodoro-objective {
   flex: 1;
-  display: flex;
+  display: none;
   flex-direction: column;
   text-align: left;
   padding-right: 40px;
@@ -59,6 +59,7 @@ body {
 }
 
 .pomodoro-objective--visible {
+  display: flex;
   max-width: 600px;
   opacity: 1;
   padding-right: 40px;
@@ -152,6 +153,98 @@ body {
   font-family: 'Fira Mono', 'Consolas', monospace;
 }
 
+.plan-history {
+  margin-top: 16px;
+  text-align: left;
+}
+
+.plan-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.plan-history h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plan-history-clear {
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.plan-history-clear:hover {
+  border-color: #f56565;
+  color: #f56565;
+}
+
+.plan-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.plan-history-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: #333;
+  background: #f9fafb;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.plan-history-item:hover {
+  border-color: #667eea;
+  background: white;
+}
+
+.plan-history-item--active {
+  border-color: #667eea;
+  background: #eef0ff;
+}
+
+.plan-history-goal {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plan-history-date {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: #888;
+}
+
 .pomodoro-timer {
   flex: 1;
   padding-left: 40px;
@@ -189,6 +282,7 @@ body {
 
 .mode-selector {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
   margin-bottom: 30px;
@@ -384,17 +478,22 @@ body {
     padding: 40px 30px;
   }
 
-  .pomodoro-objective--visible {
-    padding-right: 0;
-    padding-bottom: 30px;
-    border-right: none;
-    border-bottom: 1px solid #e0e0e0;
-    margin-bottom: 30px;
-    max-width: 100%;
+  .pomodoro-objective {
+    order: 2;
   }
 
   .pomodoro-timer {
+    order: 1;
     padding-left: 0;
+  }
+
+  .pomodoro-objective--visible {
+    padding-right: 0;
+    padding-top: 30px;
+    border-right: none;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 30px;
+    max-width: 100%;
   }
 
   .title {
@@ -417,6 +516,57 @@ body {
 
   .pomodoro-container {
     max-width: 500px;
+  }
+}
+
+@media (max-width: 400px) {
+  .app {
+    padding: 10px;
+  }
+
+  .pomodoro-container {
+    padding: 32px 18px;
+    border-radius: 16px;
+  }
+
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  .mode-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .timer-display {
+    font-size: 3.25rem;
+    margin: 20px 0;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  .controls {
+    margin: 25px 0 20px;
+  }
+
+  .pomodoro-objective--visible {
+    padding-top: 24px;
+    margin-top: 24px;
+  }
+
+  .pomodoro-objective h1 {
+    font-size: 1.2rem;
   }
 }
 
@@ -538,9 +688,43 @@ body {
   color: #c4b5fd;
 }
 
+[data-theme="dark"] .plan-history h2 {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .plan-history-item {
+  background: #111827;
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .plan-history-item:hover {
+  border-color: #818cf8;
+  background: #1f2937;
+}
+
+[data-theme="dark"] .plan-history-item--active {
+  border-color: #818cf8;
+  background: #312e81;
+}
+
+[data-theme="dark"] .plan-history-date {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .plan-history-clear {
+  border-color: #4b5563;
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .plan-history-clear:hover {
+  border-color: #fb7185;
+  color: #fb7185;
+}
+
 @media (max-width: 700px) {
   [data-theme="dark"] .pomodoro-objective--visible {
-    border-bottom-color: #374151;
+    border-top-color: #374151;
     border-right: none;
   }
 }
